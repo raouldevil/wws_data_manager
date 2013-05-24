@@ -1,2 +1,16 @@
-<h1>Surveys#show</h1>
-<p>Find me in app/views/surveys/show.html.erb</p>
+%h1
+	Responses for Survey #{@survey.sg_id}
+/ %table.table
+/ 	%th
+/ 		%td	Title
+/ 		%td ID
+/ 		%td	Status
+/ 		%td	Created
+/ 		%td
+
+/ 	- @responses.each do |survey|
+/ 		%tr#survey-item
+/ 			%td= survey.title
+/ 			%td= survey.sg_id
+/ 			%td= survey.status
+/ 			%td= survey.survey_created

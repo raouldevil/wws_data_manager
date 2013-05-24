@@ -1,4 +1,18 @@
-%h1
-	Surveys
-%p
-	Find me in app/views/surveys/index.html.erb
+%h2
+	Your Surveys
+%table.table.table-striped
+	%th
+		%td Title
+		%td	ID
+		%td	Status
+		%td	Created
+		%td
+
+	- @surveys.each do |survey|
+		%tr#survey-item
+			%td= survey.title
+			%td= survey.sg_id
+			%td= survey.status
+			%td= survey.survey_created
+			%td= link_to 'View Responses', survey_path(survey)
+%a.btn

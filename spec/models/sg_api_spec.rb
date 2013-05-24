@@ -1,5 +1,11 @@
 require 'spec_helper'
 
 describe SgApi do
-  pending "add some examples to (or delete) #{__FILE__}"
+	describe "SG api transactions" do
+		it "should return data from the server with a correct id" do
+		  json_response = SgApi.get_sg_survey_responses(survey_id)
+		  json_response["result_ok"].should eq true 
+		end
+	  
+	end
 end

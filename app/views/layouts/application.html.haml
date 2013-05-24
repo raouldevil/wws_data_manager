@@ -1,0 +1,31 @@
+
+!!! 5
+%html
+	%head
+		%title
+			World-wize Surveys Data Manager
+	  
+		= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true
+		= javascript_include_tag "application", "data-turbolinks-track" => true
+		= csrf_meta_tags
+
+	%body
+
+		%section.errors
+			- flash.each do |key, value|
+				%div{id: key}
+					= value
+
+		%section.container
+			%div.header
+				%ul.nav.nav-pills.pull-right
+					%li
+						%a{href: '#'}
+							Home
+				%h3
+					World-wize Surveys Data Manager
+
+
+			%div.page
+				= yield
+

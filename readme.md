@@ -1,0 +1,1 @@
+This app allows World-wize Surveys clients to export data themselves instead of going through the company.

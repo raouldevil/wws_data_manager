@@ -5,6 +5,8 @@ class CreateSurveys < ActiveRecord::Migration
       t.integer :sg_id
       t.string :status
       t.string :survey_created
+      t.text :questions_json
+      t.text :responses_json
 
       t.timestamps
     end

@@ -5,6 +5,7 @@ class SurveysController < ApplicationController
 
   def show
   	@survey = Survey.find(params[:id])
+  	@survey.questions_json = 
   	@responses = @survey.responses
   end
 end

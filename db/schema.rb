@@ -11,21 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130524092031) do
-
-  create_table "responses", :force => true do |t|
-    t.integer  "survey_id"
-    t.integer  "sg_response_id"
-    t.text     "json_response"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
-  end
+ActiveRecord::Schema.define(:version => 20130524084809) do
 
   create_table "surveys", :force => true do |t|
     t.string   "title"
     t.integer  "sg_id"
     t.string   "status"
     t.string   "survey_created"
+    t.text     "questions_json"
+    t.text     "responses_json"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
   end

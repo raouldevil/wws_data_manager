@@ -6,7 +6,7 @@ class Survey < ActiveRecord::Base
   validates  :survey_created, :sg_id, :questions_json, :responses_json, presence: true
   validates :title, :status, presence: true, length: { maximum: 80 }
 
-  before_validation :obtain_sg_details, on: :create
+  before_validation :obtain_sg_details
 
   private
 

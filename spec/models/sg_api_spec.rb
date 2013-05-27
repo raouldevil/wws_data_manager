@@ -18,6 +18,22 @@ describe SgApi do
 			  json_response['result_ok'].should eq true
 			end
 		end
+
+		it 'should not return questions from the server with an incorrect id' do
+			VCR.use_cassette 'models/sg_api/questions_error' do
+			  json_response_string = SgApi.get_sg_survey_questions('aa')
+			  json_response = JSON.parse(json_response_string)
+			  json_response['result_ok'].should eq false
+			end
+		end
+
+		it 'should return questions from the server with a correct id' do
+			VCR.use_cassette 'models/sg_api/questions_success' do
+			  json_response_string = SgApi.get_sg_survey_questions('1176375')
+			  json_response = JSON.parse(json_response_string)
+			  json_response['result_ok'].should eq true
+			end
+		end
 		
 		it 'should not return responses from the server with an incorrect id' do
 			VCR.use_cassette 'models/sg_api/responses_error' do

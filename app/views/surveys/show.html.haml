@@ -1,12 +1,22 @@
-%h2
+%h3
 	Details for Survey #{@survey.sg_id}
-/ %table.table
-/ 	%th
-/ 		%td	Title
-/ 		%td ID
-/ 		%td	Status
-/ 		%td	Created
-/ 		%td
+%table.table
+	%tr
+		%td	Title
+		%td= @survey.title
+	%tr
+		%td	Status
+		%td=	@survey.status
+	%tr
+		%td Created
+		%td=	@survey.survey_created
+
+%div
+	%p= @survey.questions_json
+
+%div
+	%p= @survey.responses_json
+
 
 / 	- @responses.each do |survey|
 / 		%tr#survey-item

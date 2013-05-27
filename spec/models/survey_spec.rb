@@ -2,24 +2,16 @@ require 'spec_helper'
 
 describe Survey do
 
-	it "should have a valid factory" do
+	it "should create a survey with a correct ID" do
+    VCR.use_cassette 'models/survey/survey_success' do
   	 FactoryGirl.create(:survey).should be_valid
+    end
   end
 
-  it "should have a title" do
-  	 FactoryGirl.build(:survey, title: nil).should_not be_valid
-  end
-
-  it 'should have an id' do
-    FactoryGirl.build(:survey, sg_id: nil).should_not be_valid
-  end
-
-  it "should have a created date" do
-    FactoryGirl.build(:survey, survey_created: nil).should_not be_valid
-  end
-
-  it "should have a status" do
-    FactoryGirl.build(:survey, status: nil).should_not be_valid
+  it "should not create a survey with a incorrect ID"  do
+    VCR.use_cassette 'models/survey/survey_error' do
+     FactoryGirl.create(:survey, sg_id: 1111).should_not be_valid
+    end
   end
 
 end

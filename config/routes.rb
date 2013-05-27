@@ -1,7 +1,7 @@
 WwsDataManager::Application.routes.draw do
   resources :surveys
 
-  root to: 'surveys#index'
+  root to: 'surveys#new'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

@@ -49,7 +49,7 @@ group :test do
 	gem 'capybara', '2.1.0'
 end
 
-gem 'webmock'
+gem 'typhoeus'
 gem 'thin'
 gem 'simple_form'
 gem 'haml'

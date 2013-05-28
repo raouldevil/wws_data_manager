@@ -16,8 +16,8 @@ class Survey < ActiveRecord::Base
 	  	self.title = survey_json['data']['title']
 	  	self.survey_created = survey_json['data']['created_on']
 	  	self.status = survey_json['data']['status']
-	  	self.questions_json = survey_json['data']['pages']
-	  	self.responses_json = JSON.parse(SgApi.get_sg_survey_responses(self.sg_id))
+	  	self.questions_json = SgApi.get_sg_survey_questions(self.sg_id)
+	  	self.responses_json = SgApi.get_sg_survey_responses(self.sg_id)
 	  end
   end
 

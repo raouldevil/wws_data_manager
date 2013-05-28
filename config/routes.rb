@@ -1,5 +1,9 @@
 WwsDataManager::Application.routes.draw do
-  resources :surveys
+  resources :surveys do
+    member do
+      get 'download'
+    end
+  end
 
   root to: 'surveys#new'
   # The priority is based upon order of creation:

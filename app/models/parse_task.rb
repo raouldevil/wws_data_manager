@@ -1,9 +1,10 @@
 class Question
-  attr_accessor :id, :title, :options
+  attr_accessor :id, :title, :options, :answer_set
   
-  def initialize(an_id, a_title)
-  	self.id = an_id
-  	self.title = a_title
+  def initialize args
+    args.each do |k,v|
+      instance_variable_set("@#{k}", v) unless v.nil?
+    end
   end
 
   # From activesupport but edited
@@ -32,48 +33,52 @@ class SingleAnswer < Question
   	return underscore(self.title)
   end
 
-  def get_responses(answers)
-
+  def get_responses
+  	self.answer_set.each do |answer|
+  		if answer[0].include?("question(#{self.id})")
+  			return answer[1]
+  		end
+  	end
   end
 end
 
 class FlatAnswer < Question
 
-	def initialize(an_id, a_title, options)
-		self.id = an_id
-		self.title = a_title
-		self.options = options
-	end
-
   def get_header
   	return underscore(self.title)
   end
 
-  def get_responses(answers)
-
+  def get_responses
+  	answer_string = ''
+  	self.answer_set.each do |answer|
+  		if answer[0].include?("question(#{self.id})")
+  			answer_string << answer[1] + '; '
+  		end
+  		return answer_string.chomp
+  	end
   end
 end
 
 class MultiAnswer < Question
 
-	def initialize(an_id, a_title, options)
-		self.id = an_id
-		self.title = a_title
-		self.options = options
-	end
-
   def get_header
-		titleString = ''
+		title_string = []
   	self.options.each do |option|
-  		titleString.concat underscore(',' + self.title + '_' + option['title']['English'] + ',')
+  		title_string << underscore(',' + self.title + '_' + option['title']['English'] + ',')
   	end
-  	return titleString
+  	return title_string
 	
   end
 
-  def get_responses(answers)
-
-  end
+	def get_responses
+		answer_string = []
+		self.answer_set.each do |answer|
+			if answer[0].include?("question(#{self.id})")
+				answer_string << answer[1]
+			end
+			return answer_string
+		end
+	end
 end
 
 class ParseTask
@@ -87,11 +92,11 @@ class ParseTask
 	  q_json['data'].each do |question|
 			case question['_subtype']
 			when 'textbox', 'essay', 'menu'
-				questions_array << SingleAnswer.new(question['id'], question['title']['English'])
+				questions_array << SingleAnswer.new(id: question['id'], title: question['title']['English'])
 			when 'radio', 'checkbox'
-				questions_array << FlatAnswer.new(question['id'], question['title']['English'], question['options'])
+				questions_array << FlatAnswer.new(id: question['id'], title: question['title']['English'], options: question['options'])
 			when 'multi_textbox', 'cont_sum'
-				questions_array << MultiAnswer.new(question['id'], question['title']['English'], question['options'])
+				questions_array << MultiAnswer.new(id: question['id'], title: question['title']['English'], options: question['options'])
 			end
 	  end
 		return questions_array
@@ -101,23 +106,26 @@ class ParseTask
 	def self.parseSurveyResponses(questions_array, r_json_string)
 		responses_array = []
 
-		question_ids = []
+		questions_info = []
   	questions_array.each do |question|
-  	  question_ids << question.id
+  	  questions_info << {id: question.id, type: question.class}
   	end
 		
 		r_json = JSON.parse(r_json_string)
 	  r_json['data'].each_with_index do |response, i|
- 			
-	  	question_ids.each do |q_id|
+	  	responses_array[i] = []
+	  	questions_info.each do |q_info|
+	  		puts "#### This is the type: #{q_info}"
 		  	response.each do |answer|
-		  	  if answer[0].include?("question(#{q_id})")
+		  		answer_set = q_info[:type].new(answer_set: [])
+		  	  if answer[0].include?("question(#{q_info[:id]})")
+			  		answer_set.id = q_info[:id]
 			  		puts "Answer key: #{answer[0]} value: #{answer[1]}"
-		  	  	responses_array[i] = answer
+		  	  	answer_set.answer_set << answer
 		  	  end
+		  	  if answer_set.answer_set != [] then responses_array[i] << answer_set end
 		  	end
 		  end
-
 	  end
 
 	  return responses_array
@@ -129,18 +137,21 @@ class ParseTask
 		CSV.generate do |csv|
 	  
 			questions_array = parseSurveyQuestions(q_json_string)
-			answers_array = parseSurveyResponses(questions_array, r_json_string)
+			responses_array = parseSurveyResponses(questions_array, r_json_string)
 
-			row = ''
-
+			row = []
 			questions_array.each do |question|
-				row.concat ',' + question.get_header
+				row << question.get_header
 			end
+			csv << row.flatten
 
-			puts '##########Row###############'
-			puts row
-
-			csv << row
+			row = []
+			responses_array.each do |response|
+				response.each do |answer_set|
+					row << answer_set.get_responses
+				end
+			end
+			csv << row.flatten
 
 		end
 		

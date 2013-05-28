@@ -11,11 +11,7 @@
 		%td Created
 		%td=	@survey.survey_created
 
-%div
-	%p= @survey.questions_json
-
-%div
-	%p= @survey.responses_json
+= button_to 'Download', download_survey_path(@survey, format: 'csv'), method: :get
 
 
 / 	- @responses.each do |survey|

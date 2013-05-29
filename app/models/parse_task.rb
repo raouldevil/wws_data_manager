@@ -15,6 +15,7 @@ class Question
     word.gsub!(/"/, '')
     word.gsub!(/,/, '')
     word.gsub!(/\?+/, '')
+    word.gsub!(/\!+/, '')
     word.gsub!(/\s+/, '_')
     word.gsub!(/_+/, '_')
     word.gsub!(/([A-Z\d]+)([A-Z][a-z])/,'\1_\2')
@@ -22,13 +23,8 @@ class Question
     word.tr!("-", "_")
     word.gsub!(/_+/, '_')
     word.downcase!
+    word.chomp
     word
-  end
-
-  def get_answer
-  	if answer[0].include?("question(#{self.id})")
-  		self.answer[1]
-  	end
   end
 
 end
@@ -41,7 +37,7 @@ class SingleAnswer < Question
 
   def get_answer
   	self.answer_set.each do |answer|
-	  	if answer[0].include?("question(#{self.id})")
+	  	if answer[0].include?('question(#{self.id})')
 	  		return answer[1]
 	  	end
   	end
@@ -58,7 +54,7 @@ class FlatAnswer < Question
   def get_answer
   	answer_string = ''
   	self.answer_set.each do |answer|
-	  	if answer[0].include?("question(#{self.id})")
+	  	if answer[0].include?('question(#{self.id})')
 	  		answer_string << answer[1] + ' '
 	  	end
   	end
@@ -72,7 +68,7 @@ class MultiAnswer < Question
   def get_header
 		title_array = []
   	self.options.each do |option|
-  		title_array << underscore(',' + self.title + '_' + option['title']['English'] + ',')
+  		title_array << underscore(self.title + '_' + option['title']['English'])
   	end
   	return title_array
   end
@@ -80,7 +76,7 @@ class MultiAnswer < Question
   def get_answer
   	answer_array = []
   	self.answer_set.each do |answer|
-	  	if answer[0].include?("question(#{self.id})")
+	  	if answer[0].include?('question(#{self.id})')
 	  		answer_array << answer[1]
 	  	end
   	end
@@ -94,9 +90,9 @@ class ParseTask
 	require 'json'
 	require 'csv'
 
-	def self.parseSurveyQuestions(q_json_string)
+	def self.parse_survey_questions(q_json_string)
 		questions_array = []
-		q_json = JSON.parse(q_json_string.to_s)
+		q_json = JSON.parse(q_json_string)
 	  q_json['data'].each do |question|
 			case question['_subtype']
 			when 'textbox', 'essay', 'menu'
@@ -111,7 +107,7 @@ class ParseTask
 
 	end
 
-	def self.parseSurveyResponses(questions_array, r_json_string)
+	def self.parse_survey_responses(questions_array, r_json_string)
 		responses_array = []
 
 		questions_info = []
@@ -123,9 +119,11 @@ class ParseTask
 	  r_json['data'].each_with_index do |response, i|
 	  	responses_array[i] = []
 	  	questions_info.each do |q_info|
+	  		
+	  		# Set the type of the new object according to the one in the questions array
 	  		answer_for_push = q_info[:type].new(id: q_info[:id], answer_set: [])
 		  	response.each do |answer|		  				
-		  	  if answer[0].include?("question(#{q_info[:id]})")
+		  	  if answer[0].include?('question(#{q_info[:id]})')
 		  	  	answer_for_push.answer_set << answer
 		  	  	puts "#### This is the answer id: #{answer_for_push.id} answer: #{answer_for_push.answer_set}"
 		  	  end 
@@ -143,8 +141,8 @@ class ParseTask
 
 		CSV.generate do |csv|
 	  
-			questions_array = parseSurveyQuestions(q_json_string)
-			responses_array = parseSurveyResponses(questions_array, r_json_string)
+			questions_array = parse_survey_questions(q_json_string)
+			responses_array = parse_survey_responses(questions_array, r_json_string)
 
 			header_row = []
 			questions_array.each do |question|

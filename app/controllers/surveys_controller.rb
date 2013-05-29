@@ -12,7 +12,7 @@ class SurveysController < ApplicationController
   end
 
   def create
-  	if @survey = Survey.find_by_id(params[:survey][:sg_id])
+  	if @survey = Survey.find_by_sg_id(params[:survey][:sg_id])
   		if @survey.update_attributes(params[:survey])
   			flash[:success] = 'Survey found and loaded.'
   			redirect_to survey_path(@survey)

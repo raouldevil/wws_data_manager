@@ -25,6 +25,12 @@ class Question
     word
   end
 
+  def get_answer
+  	if answer[0].include?("question(#{self.id})")
+  		self.answer[1]
+  	end
+  end
+
 end
 
 class SingleAnswer < Question
@@ -33,13 +39,14 @@ class SingleAnswer < Question
   	return underscore(self.title)
   end
 
-  def get_responses
+  def get_answer
   	self.answer_set.each do |answer|
-  		if answer[0].include?("question(#{self.id})")
-  			return answer[1]
-  		end
+	  	if answer[0].include?("question(#{self.id})")
+	  		return answer[1]
+	  	end
   	end
   end
+
 end
 
 class FlatAnswer < Question
@@ -48,37 +55,38 @@ class FlatAnswer < Question
   	return underscore(self.title)
   end
 
-  def get_responses
+  def get_answer
   	answer_string = ''
   	self.answer_set.each do |answer|
-  		if answer[0].include?("question(#{self.id})")
-  			answer_string << answer[1] + '; '
-  		end
-  		return answer_string.chomp
+	  	if answer[0].include?("question(#{self.id})")
+	  		answer_string << answer[1] + ' '
+	  	end
   	end
+  	return answer_string
   end
+
 end
 
 class MultiAnswer < Question
 
   def get_header
-		title_string = []
+		title_array = []
   	self.options.each do |option|
-  		title_string << underscore(',' + self.title + '_' + option['title']['English'] + ',')
+  		title_array << underscore(',' + self.title + '_' + option['title']['English'] + ',')
   	end
-  	return title_string
-	
+  	return title_array
   end
 
-	def get_responses
-		answer_string = []
-		self.answer_set.each do |answer|
-			if answer[0].include?("question(#{self.id})")
-				answer_string << answer[1]
-			end
-			return answer_string
-		end
-	end
+  def get_answer
+  	answer_array = []
+  	self.answer_set.each do |answer|
+	  	if answer[0].include?("question(#{self.id})")
+	  		answer_array << answer[1]
+	  	end
+  	end
+  	return answer_array
+  end
+
 end
 
 class ParseTask
@@ -115,16 +123,15 @@ class ParseTask
 	  r_json['data'].each_with_index do |response, i|
 	  	responses_array[i] = []
 	  	questions_info.each do |q_info|
-	  		puts "#### This is the type: #{q_info}"
-		  	response.each do |answer|
-		  		answer_set = q_info[:type].new(answer_set: [])
+	  		answer_for_push = q_info[:type].new(id: q_info[:id], answer_set: [])
+		  	response.each do |answer|		  				
 		  	  if answer[0].include?("question(#{q_info[:id]})")
-			  		answer_set.id = q_info[:id]
-			  		puts "Answer key: #{answer[0]} value: #{answer[1]}"
-		  	  	answer_set.answer_set << answer
-		  	  end
-		  	  if answer_set.answer_set != [] then responses_array[i] << answer_set end
+		  	  	answer_for_push.answer_set << answer
+		  	  	puts "#### This is the answer id: #{answer_for_push.id} answer: #{answer_for_push.answer_set}"
+		  	  end 
 		  	end
+		  	if answer_for_push.answer_set == [] then answer_for_push.answer_set << '' end
+		  	responses_array[i] << answer_for_push
 		  end
 	  end
 
@@ -139,19 +146,21 @@ class ParseTask
 			questions_array = parseSurveyQuestions(q_json_string)
 			responses_array = parseSurveyResponses(questions_array, r_json_string)
 
-			row = []
+			header_row = []
 			questions_array.each do |question|
-				row << question.get_header
+				header_row << question.get_header
 			end
-			csv << row.flatten
+			csv << header_row.flatten
 
-			row = []
+			
 			responses_array.each do |response|
-				response.each do |answer_set|
-					row << answer_set.get_responses
+				response_row = []
+				response.each do |answer_object|
+					response_row << answer_object.get_answer
 				end
+				csv << response_row.flatten
 			end
-			csv << row.flatten
+			
 
 		end
 		

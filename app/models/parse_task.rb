@@ -37,7 +37,7 @@ class SingleAnswer < Question
 
   def get_answer
   	self.answer_set.each do |answer|
-	  	if answer[0].include?('question(#{self.id})')
+	  	if answer[0].include?("question(#{self.id})")
 	  		return answer[1]
 	  	end
   	end
@@ -54,7 +54,7 @@ class FlatAnswer < Question
   def get_answer
   	answer_string = ''
   	self.answer_set.each do |answer|
-	  	if answer[0].include?('question(#{self.id})')
+	  	if answer[0].include?("question(#{self.id})")
 	  		answer_string << answer[1] + ' '
 	  	end
   	end
@@ -76,7 +76,7 @@ class MultiAnswer < Question
   def get_answer
   	answer_array = []
   	self.answer_set.each do |answer|
-	  	if answer[0].include?('question(#{self.id})')
+	  	if answer[0].include?("question(#{self.id})")
 	  		answer_array << answer[1]
 	  	end
   	end
@@ -119,16 +119,16 @@ class ParseTask
 	  r_json['data'].each_with_index do |response, i|
 	  	responses_array[i] = []
 	  	questions_info.each do |q_info|
-	  		
+
 	  		# Set the type of the new object according to the one in the questions array
 	  		answer_for_push = q_info[:type].new(id: q_info[:id], answer_set: [])
 		  	response.each do |answer|		  				
-		  	  if answer[0].include?('question(#{q_info[:id]})')
+		  	  if answer[0].include?("question(#{q_info[:id]})")
 		  	  	answer_for_push.answer_set << answer
 		  	  	puts "#### This is the answer id: #{answer_for_push.id} answer: #{answer_for_push.answer_set}"
 		  	  end 
 		  	end
-		  	if answer_for_push.answer_set == [] then answer_for_push.answer_set << '' end
+		  	if answer_for_push.answer_set == [] then answer_for_push.answer_set << ["question(#{self.id})", ''] end
 		  	responses_array[i] << answer_for_push
 		  end
 	  end

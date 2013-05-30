@@ -14,14 +14,14 @@ describe SingleAnswer do
 	describe 'get_header' do
 		it 'should return a word without special characters' do
 		  single_answer = SingleAnswer.new(id: 1, title: 'One small step?')
-		  single_answer.get_header.should eq 'one_small_step'
+		  single_answer.get_header.should eq ['one_small_step']
 		end
 	end
 
 	describe 'get_answer' do
 		it 'should return the answer' do
 		  single_answer = SingleAnswer.new(id: 1, answer_set: [['[question(1)]', 'Yes!']])
-	    single_answer.get_answer.should eq 'Yes!'
+	    single_answer.get_answer.should eq ['Yes!']
 		end
 	end
 end
@@ -30,14 +30,14 @@ describe FlatAnswer do
 	describe 'get_header' do
 		it 'should return a word without special characters' do
 		  flat_answer = FlatAnswer.new(id: 1, title: 'One small step?')
-		  flat_answer.get_header.should eq 'one_small_step'
+		  flat_answer.get_header.should eq ['one_small_step']
 		end
 	end
 
 	describe 'get_answer' do
 		it 'should return the answer array' do
 		  flat_answer = FlatAnswer.new(id: 1, answer_set: [['[question(1), option(10022)', 'Yes'],['[question(1), option(10023)]', 'No']])
-	    flat_answer.get_answer.should eq 'Yes No '
+	    flat_answer.get_answer.should eq ['Yes No ']
 		end
 	end
 end
@@ -63,12 +63,12 @@ describe ParseTask do
 	describe 'parse_survey_questions_responses' do
 
 		before(:each) do
-		  @q_json_string = '{"result_ok":true, "data":['
+		  @q_json_string = '['
 			@q_json_string +=  '{"id":1,"_subtype":"checkbox","title":{"English":"Question - Checkbox"},"options":['
 			@q_json_string +=    	'{"id":10010,"value":"One"},{"id":10011,"value":"Two"},{"id":10012,"value":"Three"}'
 			@q_json_string +=   ']},'
-			@q_json_string += 	'{"id":2,"_subtype":"textbox","title":{"English":"Question - String"}}]'
-			@q_json_string += '}'
+			@q_json_string += 	'{"id":2,"_subtype":"textbox","title":{"English":"Question - String"}}'
+			@q_json_string += ']'
 		end
 
 		it 'should parse the question headers' do
@@ -83,18 +83,18 @@ describe ParseTask do
 		end
 
 		it 'should parse the question responses' do
-		  r_json_string = '{"result_ok":true,"data":['
-		  r_json_string += 		'{"id":"1","[question(1), option(10013)]":"One","[question(1), option(10014)]":"Two", "[question(2)]":"Test one"},'
-		  r_json_string += 		'{"id":"2","[question(1), option(10013)]":"One","[question(2)]":"Test two"}'
-		  r_json_string += 	']}'
+		  r_json_string = '['
+		  r_json_string +=   '{"id":"1","[question(1), option(10013)]":"One","[question(1), option(10014)]":"Two", "[question(2)]":"Test one"},'
+		  r_json_string += 	 '{"id":"2","[question(1), option(10013)]":"One","[question(2)]":"Test two"}'
+		  r_json_string += ']'
 		  q_array = ParseTask.parse_survey_questions(@q_json_string)
 		  r_array = ParseTask.parse_survey_responses(q_array, r_json_string)
 		  r_array[0][0].class.should eq FlatAnswer
-		  r_array[0][0].answer_set.should eq [['[question(1), option(10013)]', 'One'],['[question(1), option(10014)]', 'Two']]
+		  r_array[0][0].answer_set.should eq [['[question(1), option(10013)]', 'One'],['[question(1), option(10014)]', 'Two'], ['[question(1)]', '']]
 		  r_array[0][1].class.should eq SingleAnswer
 			r_array[0][1].answer_set.should eq [['[question(2)]', 'Test one']]
 		  r_array[1][0].class.should eq FlatAnswer
-		  r_array[1][0].answer_set.should eq [['[question(1), option(10013)]', 'One']]
+		  r_array[1][0].answer_set.should eq [['[question(1), option(10013)]', 'One'], ['[question(1)]', ''], ['[question(1)]', '']]
 		  r_array[1][1].class.should eq SingleAnswer
 			r_array[1][1].answer_set.should eq [['[question(2)]', 'Test two']]
 		end

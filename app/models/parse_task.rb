@@ -14,6 +14,8 @@ class Question
     word.gsub!(/'/, '')
     word.gsub!(/"/, '')
     word.gsub!(/,/, '')
+    word.gsub!(/:+/, '')
+    word.gsub!(/\.+/, '')
     word.gsub!(/\?+/, '')
     word.gsub!(/\!+/, '')
     word.gsub!(/\s+/, '_')
@@ -32,13 +34,15 @@ end
 class SingleAnswer < Question
 
   def get_header
-  	return underscore(self.title)
+  	# Must return as array to use concat
+  	return [underscore(self.title)]
   end
 
   def get_answer
+  	# Must return as array to use concat
   	self.answer_set.each do |answer|
 	  	if answer[0].include?("question(#{self.id})")
-	  		return answer[1]
+	  		return [answer[1]]
 	  	end
   	end
   end
@@ -48,17 +52,19 @@ end
 class FlatAnswer < Question
 
   def get_header
-  	return underscore(self.title)
+  	# Must return as array to use concat
+  	return [underscore(self.title)]
   end
 
   def get_answer
+  	# Must return as array to use concat
   	answer_string = ''
   	self.answer_set.each do |answer|
 	  	if answer[0].include?("question(#{self.id})")
 	  		answer_string << answer[1] + ' '
 	  	end
   	end
-  	return answer_string
+  	return [answer_string]
   end
 
 end
@@ -92,8 +98,8 @@ class ParseTask
 
 	def self.parse_survey_questions(q_json_string)
 		questions_array = []
-		q_json = JSON.parse(q_json_string)
-	  q_json['data'].each do |question|
+		q_json_data = JSON.parse(q_json_string)
+	  q_json_data.each do |question|
 			case question['_subtype']
 			when 'textbox', 'essay', 'menu'
 				questions_array << SingleAnswer.new(id: question['id'], title: question['title']['English'])
@@ -109,14 +115,19 @@ class ParseTask
 
 	def self.parse_survey_responses(questions_array, r_json_string)
 		responses_array = []
-
 		questions_info = []
+
   	questions_array.each do |question|
-  	  questions_info << {id: question.id, type: question.class}
+  		if question.options != nil
+  	    questions_info_hash =  {id: question.id, type: question.class, options: question.options.count}
+  	  else
+  	  	questions_info_hash =  {id: question.id, type: question.class}
+  	  end
+  	  questions_info << questions_info_hash
   	end
 		
-		r_json = JSON.parse(r_json_string)
-	  r_json['data'].each_with_index do |response, i|
+	  r_json_data = JSON.parse(r_json_string)
+	  r_json_data.each_with_index do |response, i|
 	  	responses_array[i] = []
 	  	questions_info.each do |q_info|
 
@@ -125,10 +136,15 @@ class ParseTask
 		  	response.each do |answer|		  				
 		  	  if answer[0].include?("question(#{q_info[:id]})")
 		  	  	answer_for_push.answer_set << answer
-		  	  	puts "#### This is the answer id: #{answer_for_push.id} answer: #{answer_for_push.answer_set}"
 		  	  end 
 		  	end
-		  	if answer_for_push.answer_set == [] then answer_for_push.answer_set << ["[question(#{answer_for_push.id})]", ''] end
+		  	if q_info[:options]
+		  		while answer_for_push.answer_set.count < q_info[:options]
+		  			answer_for_push.answer_set << ["[question(#{answer_for_push.id})]", '']
+		  		end
+		  	else
+		  		if answer_for_push.answer_set == [] then answer_for_push.answer_set << ["[question(#{answer_for_push.id})]", ''] end
+		  	end
 		  	responses_array[i] << answer_for_push
 		  end
 	  end
@@ -137,26 +153,28 @@ class ParseTask
 		
 	end
 
-	def self.parseCSV(q_json_string, r_json_string)
+	def self.parseCSV(q_json_data, r_json_data)
 
 		CSV.generate do |csv|
-	  
-			questions_array = parse_survey_questions(q_json_string)
-			responses_array = parse_survey_responses(questions_array, r_json_string)
+
+			questions_array = parse_survey_questions(q_json_data)
+			responses_array = parse_survey_responses(questions_array, r_json_data)
 
 			header_row = []
 			questions_array.each do |question|
-				header_row << question.get_header
+				header_row.concat(question.get_header)
 			end
-			csv << header_row.flatten
+			puts "No of questions: #{header_row.count}"
+			csv << header_row
 
 			
 			responses_array.each do |response|
 				response_row = []
 				response.each do |answer_object|
-					response_row << answer_object.get_answer
+					response_row.concat(answer_object.get_answer)
 				end
-				csv << response_row.flatten
+				puts "No of answers: #{response_row.count}"
+				csv << response_row
 			end
 			
 

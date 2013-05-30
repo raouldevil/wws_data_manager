@@ -5,9 +5,6 @@ gem 'rails', '3.2.12'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
-
-
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -37,15 +34,22 @@ gem 'bcrypt-ruby', '~> 3.0.0'
 # To use debugger
 # gem 'debugger'
 
-# Added to initial commit
+# Added on top
 
-group :test, :development do
+group :test  do
+	gem 'sqlite3', '1.3.7'
 	gem 'rspec-rails', '2.13.1'
 	gem 'vcr', '2.4.0'
 end
 
-group :test do
-	gem "factory_girl_rails", '4.2.1'
+group :production do
+	gem 'pg'
+end
+
+group :development do
+	gem 'sqlite3', '1.3.7'
+	gem 'rspec-rails', '2.13.1'
+	gem 'factory_girl_rails', '4.2.1'
 	gem 'capybara', '2.1.0'
 end
 

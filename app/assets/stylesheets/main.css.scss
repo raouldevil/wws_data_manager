@@ -16,16 +16,21 @@ div.header {
 }
 
 
-div.error {
+div#error, div#success {
+	background-color: #fff;
 	text-align: center;
-	border-top: 1px solid #ddd;
-	border-bottom: 1px solid #ccc;
+	border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
 }
 
-div.success {
-	text-align: center;
-	border-top: 1px solid #ddd;
-	border-bottom: 1px solid #ccc;
+div#error {
+	color: red;
+}
+
+
+div#success {
+	color: green;
 }
 
 div.page {
@@ -44,7 +49,7 @@ div.footer {
 	text-align: center;
 	font-family: sans-serif;
 	background-color: #EEF3E2;
-		border-radius: 0 0 6px 6px;
+	border-radius: 0 0 6px 6px;
 	-webkit-border-radius: 0 0 6px 6px;
 	-moz-border-radius: 0 0 6px 6px;
 }

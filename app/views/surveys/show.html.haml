@@ -14,11 +14,3 @@
 			%td=	@survey.survey_created
 
 	= button_to 'Download', download_survey_path(@survey, format: 'csv'), method: :get, class: 'btn'
-
-
-	/ 	- @responses.each do |survey|
-	/ 		%tr#survey-item
-	/ 			%td= survey.title
-	/ 			%td= survey.sg_id
-	/ 			%td= survey.status
-	/ 			%td= survey.survey_created

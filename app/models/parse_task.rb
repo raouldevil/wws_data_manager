@@ -128,7 +128,7 @@ class ParseTask
 		  	  	puts "#### This is the answer id: #{answer_for_push.id} answer: #{answer_for_push.answer_set}"
 		  	  end 
 		  	end
-		  	if answer_for_push.answer_set == [] then answer_for_push.answer_set << ["question(#{self.id})", ''] end
+		  	if answer_for_push.answer_set == [] then answer_for_push.answer_set << ["[question(#{answer_for_push.id})]", ''] end
 		  	responses_array[i] << answer_for_push
 		  end
 	  end

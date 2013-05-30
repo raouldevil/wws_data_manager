@@ -51,7 +51,6 @@ end
 group :development do
 	gem 'sqlite3', '1.3.7'
 	gem 'rspec-rails', '2.13.1'
-	gem 'factory_girl_rails', '4.2.1'
 	gem 'capybara', '2.1.0'
 end
 

@@ -12,5 +12,8 @@
 		%tr
 			%td Created
 			%td=	@survey.survey_created
+		%tr
+			%td Number of Responses
+			%td=	@survey.response_count
 
 	= button_to 'Download', download_survey_path(@survey, format: 'csv'), method: :get, class: 'btn'

@@ -1,13 +1,88 @@
 @import "bootstrap";
 
+///////////// Overall sections and pages /////////////////
 
-section.header {
-	height: 50px;
-	border: 1px solid #bbb;
-	background-color: #eee;
-
+body {
+	background-image: url(/assets/mainbackgrey.png);
+	font-family: Arial, sans-serif;
 }
 
 section.container {
-	
+
+}
+
+div.header {
+	border: 1px solid #FEF6E4;
+}
+
+
+div.error {
+	text-align: center;
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ccc;
+}
+
+div.success {
+	text-align: center;
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ccc;
+}
+
+div.page {
+	border: 1px solid #FEF6E4;
+  background-color: #fff;
+  padding-bottom: 15px;
+	h2 {
+	  font-size: 24px;
+	  color: #1cd60b;
+	  line-height: 25px;
+	}
+}
+
+div.footer {
+	height: 20px;
+	text-align: center;
+	font-family: sans-serif;
+	background-color: #EEF3E2;
+		border-radius: 0 0 6px 6px;
+	-webkit-border-radius: 0 0 6px 6px;
+	-moz-border-radius: 0 0 6px 6px;
+}
+
+///////////// Page-specific stuff /////////////////
+
+div.header-image {
+	padding-left: 5px;
+  background-color: #eee;
+}
+
+div.header-title {
+	padding: 5px;
+	background-color: #666;
+	border-radius: 0 0 6px 6px;
+	-webkit-border-radius: 0 0 6px 6px;
+	-moz-border-radius: 0 0 6px 6px;
+	h1 {
+		
+		font-size: 24px;
+	  color: #b9bdbd;
+	  line-height: 30px;
+	  margin: 0;
+	}
+}
+
+div.fform {
+	padding: 5px;
+	border: 1px solid #444;
+	border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+}
+
+div.survey-details {
+	padding: 10px;
+}
+
+div.spacer {
+	height: 15px
 }

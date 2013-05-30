@@ -11,21 +11,27 @@
 
 	%body
 
-		%section.errors
+		%section.container
+
+			%div.header
+				%ul.nav.nav-pills.pull-right
+					%li
+						%a{href: '/'}
+							Home
+
+				%div.header-image= image_tag("wwLogoTransparent.png", alt: "Incivent")
+				%div.header-title
+					%h1 Data Manager
+
 			- flash.each do |key, value|
 				%div{id: key}
 					= value
 
-		%section.container
-			%div.header
-				%ul.nav.nav-pills.pull-right
-					%li
-						%a{href: '#'}
-							Home
-				%h3
-					World-wize Surveys Data Manager
-
+			%div.spacer
 
 			%div.page
 				= yield
+
+			%div.footer
+				%p Copyright World-wize Surveys 2013
 

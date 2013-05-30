@@ -1,6 +1,10 @@
-%h3
-	Find a Survey
 
-= simple_form_for @survey do |f|
-	= f.input :sg_id, label: 'Survey ID'
-	= f.submit 'Find'
+%div.row
+	%div.span6.offset3
+		%h2
+			Find a Survey
+
+		%div.fform
+			= simple_form_for @survey do |f|
+				= f.input :sg_id, label: 'Survey ID'
+				= f.submit 'Find', class: 'btn'

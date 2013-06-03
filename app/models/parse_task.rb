@@ -167,7 +167,6 @@ class ParseTask
 			questions_array.each do |question|
 				header_row.concat(question.get_header)
 			end
-			puts "No of questions: #{header_row.count}"
 			csv << header_row
 
 			
@@ -176,7 +175,6 @@ class ParseTask
 				response.each do |answer_object|
 					response_row.concat(answer_object.get_answer)
 				end
-				puts "No of answers: #{response_row.count}"
 				csv << response_row
 			end
 			

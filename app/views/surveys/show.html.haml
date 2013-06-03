@@ -17,5 +17,8 @@
 			%td=	@survey.response_count
 
 	= button_to 'Create CSV', parse_survey_path(@survey), method: :get, class: 'btn', id: 'start-download', remote: true
-%div.download-details 
+%div.download-details
+	%div.download-details-text
+		%strong File creation complete.
+	= button_to 'Save CSV', download_survey_path(@survey, format: 'csv'), method: :get, class: 'btn btn-success', id: 'start-download'
 

@@ -1,0 +1,3 @@
+%div.download-details-text
+	%strong File creation complete.
+= button_to 'Save CSV', download_survey_path(survey_id, format: 'csv'), method: :get, class: 'btn btn-success', id: 'start-download'

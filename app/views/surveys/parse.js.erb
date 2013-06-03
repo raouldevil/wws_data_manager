@@ -1,0 +1,2 @@
+$('body').removeClass('loading');
+$('div.download-details').html('<%= escape_javascript(render "parse", survey_id: @survey.id) %>').show();

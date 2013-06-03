@@ -2,6 +2,7 @@ WwsDataManager::Application.routes.draw do
   resources :surveys do
     member do
       get 'download'
+      get 'parse'
     end
   end
 

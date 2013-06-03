@@ -84,10 +84,24 @@ div.fform {
 	-moz-border-radius: 6px;
 }
 
-div.survey-details {
-	padding: 10px;
+div.survey-details, div.download-details {
+	padding: 0px 10px;
 }
 
 div.spacer {
 	height: 15px
+}
+
+div.download-details {
+	display: none;
+	margin-bottom: 20px;
+}
+div.download-details-text  {
+	text-align: center;
+	margin-bottom: 20px;
+	padding: 8px;
+	border: 1px solid #222;
+	border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
 }

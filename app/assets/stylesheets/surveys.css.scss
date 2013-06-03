@@ -1,3 +1,40 @@
 // Place all the styles related to the Surveys controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+/* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Width, height, top and left speak
+   speak for themselves. Background we set to 80% white with
+   our animation centered, and no-repeating */
+.modal {
+		.modal-text {
+			text-align: center;
+      padding: 0px 3px;
+		}
+    display:    none;
+    position:   absolute;
+    z-index:    1000;
+    top:        400px;
+    left:       800px;
+    height:     100px;
+    width:      250px;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('http://i.stack.imgur.com/FhHRx.gif') 
+                50% 70% 
+                no-repeat;
+
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading {
+    overflow: hidden;   
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .modal {
+    display: block;
+}

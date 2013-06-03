@@ -1,7 +1,7 @@
 class Survey < ActiveRecord::Base
 
 
-  attr_accessible :status, :survey_created, :sg_id, :title, :questions_json, :responses_json, :response_count
+  attr_accessible :status, :survey_created, :sg_id, :title, :questions_json, :responses_json, :response_count, :csv
 
   validates  :survey_created, :sg_id, :questions_json, :responses_json, :response_count, presence: true
   validates :title, :status, presence: true, length: { maximum: 80 }

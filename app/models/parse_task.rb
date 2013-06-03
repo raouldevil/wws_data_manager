@@ -114,12 +114,13 @@ class ParseTask
 	end
 
 	def self.parse_survey_responses(questions_array, r_json_string)
+
 		responses_array = []
 		questions_info = []
 
   	questions_array.each do |question|
   		if question.options != nil
-  	    questions_info_hash =  {id: question.id, type: question.class, options: question.options.count}
+  	    questions_info_hash =  {id: question.id, type: question.class, options_count: question.options.count}
   	  else
   	  	questions_info_hash =  {id: question.id, type: question.class}
   	  end
@@ -130,21 +131,23 @@ class ParseTask
 	  r_json_data.each_with_index do |response, i|
 	  	responses_array[i] = []
 	  	questions_info.each do |q_info|
-
 	  		# Set the type of the new object according to the one in the questions array
 	  		answer_for_push = q_info[:type].new(id: q_info[:id], answer_set: [])
-		  	response.each do |answer|		  				
-		  	  if answer[0].include?("question(#{q_info[:id]})")
-		  	  	answer_for_push.answer_set << answer
-		  	  end 
+					  	
+		  	answers_set = response.group_by {|i| i[0].include?("[question(#{q_info[:id]})")}
+		  	if answers_set[true] == nil
+		  		answers_set[true] = []
+		  		answers_set[true] << ["[question(#{q_info[:id]})]", ''] 
 		  	end
-		  	if q_info[:options]
-		  		while answer_for_push.answer_set.count < q_info[:options]
-		  			answer_for_push.answer_set << ["[question(#{answer_for_push.id})]", '']
+		  	if q_info[:options_count]
+		  		while answers_set[true].count < q_info[:options_count]
+		  			answers_set[true] << ["[question(#{q_info[:id]})]", '']
 		  		end
-		  	else
-		  		if answer_for_push.answer_set == [] then answer_for_push.answer_set << ["[question(#{answer_for_push.id})]", ''] end
 		  	end
+		  	answer_for_push.answer_set = answers_set[true]
+		  	# TODO Remove
+		  	puts "Adding answers for for response #{i}, question #{q_info[:id]}."
+		  	
 		  	responses_array[i] << answer_for_push
 		  end
 	  end

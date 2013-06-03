@@ -32,13 +32,21 @@ class SurveysController < ApplicationController
   	end
   end
 
+  def parse
+    survey = Survey.find(params[:id])
+    csv = ParseTask.parseCSV(survey.questions_json, survey.responses_json)
+    survey.update_attributes(csv: csv)
+    respond_to do |format|
+      format.js
+    end
+  end
+
   def download
     survey = Survey.find(params[:id])
-    csv = ParseTask.parseCSV(survey.questions_json, survey.responses_json,)
+    csv = survey.csv
     respond_to do |format|
       format.csv { send_data csv }
     end
   end
-
 
 end

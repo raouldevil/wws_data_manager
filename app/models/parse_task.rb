@@ -156,19 +156,17 @@ class ParseTask
 		
 	end
 
-	def self.parseCSV(q_json_data, r_json_data)
+	def self.parseCSV(survey)
 
-		CSV.generate do |csv|
-
-			questions_array = parse_survey_questions(q_json_data)
-			responses_array = parse_survey_responses(questions_array, r_json_data)
+		parsed_csv = CSV.generate do |csv|
+			questions_array = parse_survey_questions(survey.questions_json)
+			responses_array = parse_survey_responses(questions_array, survey.responses_json)
 
 			header_row = []
 			questions_array.each do |question|
 				header_row.concat(question.get_header)
 			end
 			csv << header_row
-
 			
 			responses_array.each do |response|
 				response_row = []
@@ -177,10 +175,9 @@ class ParseTask
 				end
 				csv << response_row
 			end
-			
-
-		end
 		
+		end
+		survey.update_attributes(csv: parsed_csv)
 	end
 	
 

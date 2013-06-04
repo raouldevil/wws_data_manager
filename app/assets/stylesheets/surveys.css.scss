@@ -2,22 +2,43 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+div.survey-details, div.download-details {
+  padding: 0px 10px;
+}
 
-/* Start by setting display:none to make this hidden.
-   Then we position it in relation to the viewport window
-   with position:fixed. Width, height, top and left speak
-   speak for themselves. Background we set to 80% white with
-   our animation centered, and no-repeating */
+div.download-details {
+  float: none;
+  height: 30px;
+  form {
+    float: left;
+    padding-right: 10px;
+  }
+
+}
+
+div.download-details-text  {
+  float: none;
+  display: none;
+  text-align: center;
+  margin: 0px 10px;
+  padding: 8px;
+  border: 1px solid #222;
+  border-radius: 6px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+}
+
+
 .modal {
 		.modal-text {
 			text-align: center;
       padding: 0px 3px;
 		}
     display:    none;
-    position:   absolute;
+    position:   fixed;
     z-index:    1000;
-    top:        400px;
-    left:       800px;
+    top:        70%;
+    left:       61%;
     height:     100px;
     width:      250px;
     background: rgba( 255, 255, 255, .8 ) 

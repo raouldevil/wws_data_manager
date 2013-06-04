@@ -1,2 +1,2 @@
 $('body').removeClass('loading');
-$('div.download-details').show();
+$('div.download-details-text').show();

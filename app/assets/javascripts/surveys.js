@@ -1,5 +1,5 @@
 $(function() {
-	$('#start-download').click(function() {
-    $('body').addClass('loading');
+	$('#start-parse').click(function() {
+	   $('body').addClass('loading');
 	});
 });

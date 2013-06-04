@@ -15,10 +15,16 @@
 		%tr
 			%td Number of Responses
 			%td=	@survey.response_count
-
-	= button_to 'Create CSV', parse_survey_path(@survey), method: :get, class: 'btn', id: 'start-download', remote: true
+		%tr
+			%td Last fetched
+			%td=	time_ago_in_words(@survey.updated_at) + ' ago'
 %div.download-details
-	%div.download-details-text
-		%strong File creation complete.
-	= button_to 'Save CSV', download_survey_path(@survey, format: 'csv'), method: :get, class: 'btn btn-success'
+	- if @survey.csv != nil
+		= button_to 'Save CSV', download_survey_path(@survey, format: 'csv'), method: :get, class: 'btn btn-success'
+	= button_to 'Create new CSV', parse_survey_path(@survey), method: :get, class: 'btn', id: 'start-parse', remote: true
+	%br.clear
+%div.spacer
+%div.download-details-text
+	%strong The CSV file is being created. Please refresh your window in a few minutes to download.
+	
 

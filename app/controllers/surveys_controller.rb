@@ -13,29 +13,28 @@ class SurveysController < ApplicationController
 
   def create
   	if @survey = Survey.find_by_sg_id(params[:survey][:sg_id])
-  		if @survey.update_attributes(params[:survey])
-  			flash[:success] = 'Survey found and loaded.'
-  			redirect_to survey_path(@survey)
-  		else
-  			flash[:error] = 'Cound not find a survey with that ID.'
-  			render 'new'
-  		end
-  	else 
-  		@survey = Survey.new(params[:survey])
-  		if @survey.save
-  			flash[:success] = 'Survey found and loaded.'
-  			redirect_to survey_path(@survey)
-  		else
-  			flash[:error] = 'Cound not find a survey with that ID.'
-  			render 'new'
-  		end
+      @survey.destroy
+  		# if @survey.update_attributes(params[:survey])
+  		# 	flash[:success] = 'Survey found and loaded.'
+  		# 	redirect_to survey_path(@survey)
+  		# else
+  		# 	flash[:error] = 'Cound not find a survey with that ID.'
+  		# 	render 'new'
+  		# end
   	end
+		@survey = Survey.new(params[:survey])
+		if @survey.save
+			flash[:success] = 'Survey found and loaded.'
+			redirect_to survey_path(@survey)
+		else
+			flash[:error] = 'Cound not find a survey with that ID.'
+			render 'new'
+		end
   end
 
   def parse
     survey = Survey.find(params[:id])
-    csv = ParseTask.delay.parseCSV(survey)
-    
+    survey.delay.parseCSV
     respond_to do |format|
       format.js
     end

@@ -1,12 +1,40 @@
 class Survey < ActiveRecord::Base
 
+  require 'csv'
 
-  attr_accessible :status, :survey_created, :sg_id, :title, :questions_json, :responses_json, :response_count, :csv
+  attr_accessible :status, :survey_created, :sg_id, :title, :questions_json, :responses_json, :response_count, :csv, :downloaded_at
 
   validates  :survey_created, :sg_id, :questions_json, :responses_json, :response_count, presence: true
   validates :title, :status, presence: true, length: { maximum: 80 }
 
-  before_validation :obtain_sg_details
+  before_validation :obtain_sg_details, on: :create
+
+  def parseCSV
+
+    parsed_csv = CSV.generate do |csv|
+      questions_array = ParseTask.parse_survey_questions(self.questions_json)
+      responses_array = ParseTask.parse_survey_responses(questions_array, self.responses_json)
+
+      header_row = []
+      questions_array.each do |question|
+        header_row.concat(question.get_header)
+      end
+      csv << header_row
+      
+      responses_array.each do |response|
+        response_row = []
+        response.each do |answer_object|
+          response_row.concat(answer_object.get_answer)
+        end
+        csv << response_row
+      end
+    
+    end
+    self.csv = nil
+    self.csv = parsed_csv
+    self.downloaded_at = Time.now
+    self.save!
+  end
 
   private
 

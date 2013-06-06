@@ -2,25 +2,28 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-div.survey-details, div.download-details {
+div.survey-details {
   padding: 0px 10px;
 }
 
-div.download-details {
+div.download-details-buttons {
+  padding: 0px 10px;
   float: none;
   height: 30px;
   form {
     float: left;
     padding-right: 10px;
   }
+}
 
+div.download-details-block {
+  display: none;
+  padding: 0px 10px;
 }
 
 div.download-details-text  {
   float: none;
-  display: none;
   text-align: center;
-  margin: 0px 10px;
   padding: 8px;
   border: 1px solid #222;
   border-radius: 6px;
@@ -39,7 +42,7 @@ div.download-details-text  {
     z-index:    1000;
     top:        70%;
     left:       61%;
-    height:     100px;
+    height:     70px;
     width:      250px;
     background: rgba( 255, 255, 255, .8 ) 
                 url('http://i.stack.imgur.com/FhHRx.gif') 

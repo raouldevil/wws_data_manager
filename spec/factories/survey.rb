@@ -8,6 +8,8 @@ FactoryGirl.define do
     survey_created nil
     questions_json nil
     responses_json nil
+    csv nil
+    response_count nil
 
   end
 end

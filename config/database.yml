@@ -20,6 +20,7 @@ test:
 
 production:
   adapter: postgresql
+  encoding: unicode
   database: db/production.postgresql
   username: deployer
   password: deploy

@@ -10,15 +10,17 @@
 		= csrf_meta_tags
 
 	%body
-
-		%section.container
-
-			%div.header
-				%ul.nav.nav-pills.pull-right
+		%section.topline
+			%section.container
+				%ul.nav.nav-pills
 					%li
 						%a{href: '/'}
 							Home
 
+		%section.container
+			%div.spacer
+
+			%div.header
 				%div.header-image= image_tag("wwLogoTransparent.png", alt: "Incivent")
 				%div.header-title
 					%h1 Data Manager

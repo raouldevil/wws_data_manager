@@ -11,10 +11,24 @@ section.container {
 
 }
 
+section.topline {
+	background-color: #474747;
+	height: 34px;
+	ul {
+		margin-bottom: 0;
+		a {
+			color: #ddd;
+		}
+		a:hover {
+			color: #969996;
+		}
+	}
+
+}
+
 div.header {
 	border: 1px solid #FEF6E4;
 }
-
 
 div#error, div#success {
 	background-color: #fff;
@@ -59,14 +73,17 @@ div.footer {
 div.header-image {
 	padding-left: 5px;
   background-color: #eee;
+  border-radius: 6px 6px 0 0;
+  -webkit-border-radius: 6px 6px 0 0;
+  -moz-border-radius: 6px 6px 0 0;
 }
 
 div.header-title {
 	padding: 5px;
-	background-color: #666;
 	border-radius: 0 0 6px 6px;
 	-webkit-border-radius: 0 0 6px 6px;
 	-moz-border-radius: 0 0 6px 6px;
+	background-color: #666;
 	h1 {
 		
 		font-size: 24px;

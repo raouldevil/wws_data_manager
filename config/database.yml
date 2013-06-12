@@ -22,7 +22,7 @@ production:
   adapter: postgresql
   encoding: unicode
   database: db/production.postgresql
-  username: deployer
-  password: deploy
+  username: <%= ENV['DB_USER'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
   pool: 5
   timeout: 5000

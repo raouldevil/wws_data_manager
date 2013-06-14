@@ -17,13 +17,15 @@
 			%td=	@survey.response_count
 		%tr
 			%td
-				%strong Last fetched
+				%strong CSV Done?
 			%td
-				%strong=	time_ago_in_words(@survey.created_at) + ' ago'
+				%strong=	@survey.csv == nil ? 'Not yet' : 'Yes'
 %div.download-details-buttons
 	- if @survey.csv != nil
 		= button_to 'Save CSV', download_survey_path(@survey, format: 'csv'), method: :get, class: 'btn btn-success'
-	= button_to 'Create new CSV', parse_survey_path(@survey), method: :get, class: 'btn', id: 'start-parse', remote: true
+		= button_to 'Recreate CSV', parse_survey_path(@survey), method: :get, class: 'btn', id: 'start-parse', remote: true
+	- else
+		= button_to 'Create CSV', parse_survey_path(@survey), method: :get, class: 'btn', id: 'start-parse', remote: true
 	%br.clear
 %div.download-details-block
 	%div.spacer

@@ -53,7 +53,7 @@ class Survey < ActiveRecord::Base
 
       if json_r['page'] < json_r['total_pages']
         next_page = json_r['page'] + 1
-        json_r_next = JSON.parse(SgApi.get_sg_survey_responses(self.sg_id, 'page=' + nextpage.to_s + '&'))
+        json_r_next = JSON.parse(SgApi.get_sg_survey_responses(self.sg_id, 'page=' + next_page.to_s + '&'))
         json_r_s += JSON.dump(json_r_next['data'])
       end
       self.responses_json = json_r_s

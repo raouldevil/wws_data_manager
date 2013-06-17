@@ -49,14 +49,16 @@ class Survey < ActiveRecord::Base
 	  	self.questions_json = JSON.dump(json_q['data'])
       
       json_r = JSON.parse(SgApi.get_sg_survey_responses(self.sg_id, ''))
-      json_r_s = JSON.dump(json_r['data'])
+      json_r_s = json_r['data']
 
       if json_r['page'] < json_r['total_pages']
         next_page = json_r['page'] + 1
         json_r_next = JSON.parse(SgApi.get_sg_survey_responses(self.sg_id, 'page=' + next_page.to_s + '&'))
-        json_r_s += JSON.dump(json_r_next['data'])
+        json_r_next['data'].each do |response_item|
+          json_r_s << response_item
+        end
       end
-      self.responses_json = json_r_s
+      self.responses_json = JSON.dump(json_r_s)
 
       self.response_count = json_r['total_count'].to_i
 	  	

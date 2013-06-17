@@ -145,11 +145,10 @@ class ParseTask
 		  		end
 		  	end
 		  	answer_for_push.answer_set = answers_set[true]
-		  	# TODO Remove
-		  	puts "Adding answers for response #{i + 1}, question #{q_info[:id]}."
 		  	
 		  	responses_array[i] << answer_for_push
 		  end
+      puts "Added answers for response #{i + 1}."
 	  end
 
 	  return responses_array

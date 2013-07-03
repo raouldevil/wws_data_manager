@@ -1,35 +1,36 @@
-
-%div.survey-details
-	%h2
-		Details for Survey #{@survey.sg_id}
-	%table.table.table-bordered
-		%tr
-			%td	Title
-			%td= @survey.title
-		%tr
-			%td	Status
-			%td=	@survey.status
-		%tr
-			%td Created
-			%td=	@survey.survey_created
-		%tr
-			%td Number of Responses
-			%td=	@survey.response_count
-		%tr
-			%td
-				%strong CSV Done?
-			%td
-				%strong=	@survey.csv == nil ? 'Not yet' : 'Yes'
-%div.download-details-buttons
-	- if @survey.csv != nil
-		= button_to 'Save CSV', download_survey_path(@survey, format: 'csv'), method: :get, class: 'btn btn-success'
-		= button_to 'Recreate CSV', parse_survey_path(@survey), method: :get, class: 'btn', id: 'start-parse', remote: true
-	- else
-		= button_to 'Create CSV', parse_survey_path(@survey), method: :get, class: 'btn', id: 'start-parse', remote: true
-	%br.clear
-%div.download-details-block
-	%div.spacer
-	%div.download-details-text
-		%strong The CSV file is being created. Please refresh your window in a few minutes to download.
+%div.row
+	%div.span12
+		%div.survey-details
+			%h2
+				Details for Survey #{@survey.sg_id}
+			%table.table.table-bordered
+				%tr
+					%td	Title
+					%td= @survey.title
+				%tr
+					%td	Status
+					%td=	@survey.status
+				%tr
+					%td Created
+					%td=	@survey.survey_created
+				%tr
+					%td Number of Responses
+					%td=	@survey.response_count
+				%tr
+					%td
+						%strong CSV Done?
+					%td
+						%strong=	@survey.csv == nil ? 'Not yet' : 'Yes'
+		%div.download-details-buttons
+			- if @survey.csv != nil
+				= button_to 'Save CSV', download_survey_path(@survey, format: 'csv'), method: :get, class: 'btn btn-success'
+				= button_to 'Recreate CSV', parse_survey_path(@survey), method: :get, class: 'btn', id: 'start-parse', remote: true
+			- else
+				= button_to 'Create CSV', parse_survey_path(@survey), method: :get, class: 'btn', id: 'start-parse', remote: true
+		%br.clear
+		%div.download-details-block
+			%div.spacer
+			%div.download-details-text
+				%strong The CSV file is being created. Please refresh your window in a few minutes to download.
 	
 

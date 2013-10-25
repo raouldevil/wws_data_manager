@@ -13,23 +13,9 @@ class Survey < ActiveRecord::Base
 
     parsed_csv = CSV.generate do |csv|
       questions_array = ParseTask.parse_survey_questions(self.questions_json)
-      responses_array = ParseTask.parse_survey_responses(questions_array, self.responses_json)
-
-      header_row = []
-      questions_array.each do |question|
-        header_row.concat(question.get_header)
-      end
-      csv << header_row
-      
-      responses_array.each do |response|
-        response_row = []
-        response.each do |answer_object|
-          response_row.concat(answer_object.get_answer)
-        end
-        csv << response_row
-      end
-    
+      csv << ParseTask.stringify_survey_questions_responses(questions_array, self.responses_json)
     end
+
     self.csv = nil
     self.csv = parsed_csv
     self.downloaded_at = Time.now
@@ -47,7 +33,7 @@ class Survey < ActiveRecord::Base
 
       json_q = JSON.parse(SgApi.get_sg_survey_questions(self.sg_id))
 	  	self.questions_json = JSON.dump(json_q['data'])
-      
+
       json_r = JSON.parse(SgApi.get_sg_survey_responses(self.sg_id, ''))
       json_r_s = json_r['data']
 
@@ -61,7 +47,7 @@ class Survey < ActiveRecord::Base
       self.responses_json = JSON.dump(json_r_s)
 
       self.response_count = json_r['total_count'].to_i
-	  	
+
 	  end
   end
 

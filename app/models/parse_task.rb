@@ -1,6 +1,6 @@
 class Question
   attr_accessor :id, :title, :options, :answer_set
-  
+
   def initialize args
     args.each do |k,v|
       instance_variable_set("@#{k}", v) unless v.nil?
@@ -109,13 +109,14 @@ class ParseTask
 				questions_array << MultiAnswer.new(id: question['id'], title: question['title']['English'], options: question['options'])
 			end
 	  end
+
 		return questions_array
 
 	end
 
-	def self.parse_survey_responses(questions_array, r_json_string)
+	def self.stringify_survey_questions_responses(questions_array, r_json_string)
 
-		responses_array = []
+		questions_responses_array = []
 		questions_info = []
 
   	questions_array.each do |question|
@@ -126,34 +127,50 @@ class ParseTask
   	  end
   	  questions_info << questions_info_hash
   	end
-		
+
+    questions_string_array = []
+    questions_array.each do |question|
+      questions_string_array << (question.get_header)
+    end
+
+    questions_responses_array << questions_string_array
+
 	  r_json_data = JSON.parse(r_json_string)
 	  r_json_data.each_with_index do |response, i|
-	  	responses_array[i] = []
-	  	questions_info.each do |q_info|
-	  		# Set the type of the new object according to the one in the questions array
-	  		answer_for_push = q_info[:type].new(id: q_info[:id], answer_set: [])
-					  	
-		  	answers_set = response.group_by {|i| i[0].include?("[question(#{q_info[:id]})")}
-		  	if answers_set[true] == nil
-		  		answers_set[true] = []
-		  		answers_set[true] << ["[question(#{q_info[:id]})]", ''] 
-		  	end
-		  	if q_info[:options_count]
-		  		while answers_set[true].count < q_info[:options_count]
-		  			answers_set[true] << ["[question(#{q_info[:id]})]", '']
-		  		end
-		  	end
-		  	answer_for_push.answer_set = answers_set[true]
-		  	
-		  	responses_array[i] << answer_for_push
-		  end
+
+      responses_string_array = []
+      questions_info.each do |q_info|
+        responses_string_array << create_and_parse_response_object(q_info, response)
+      end
+
+      questions_responses_array << responses_string_array
       puts "Added answers for response #{i + 1}."
 	  end
 
-	  return responses_array
-		
+    puts questions_responses_array
+    return questions_responses_array
+
 	end
+
+  def self.create_and_parse_response_object(q_info, response)
+
+    # Set the type of the new object according to the one in the questions array
+    answer_object = q_info[:type].new(id: q_info[:id], answer_set: [])
+
+    answers_set = response.group_by {|i| i[0].include?("[question(#{q_info[:id]})")}
+    if answers_set[true] == nil
+      answers_set[true] = []
+      answers_set[true] << ["[question(#{q_info[:id]})]", '']
+    end
+    if q_info[:options_count]
+      while answers_set[true].count < q_info[:options_count]
+        answers_set[true] << ["[question(#{q_info[:id]})]", '']
+      end
+    end
+    answer_object.answer_set = answers_set[true]
+    return answer_object.get_answer
+
+  end
 
 
 end

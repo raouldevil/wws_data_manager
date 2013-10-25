@@ -88,15 +88,10 @@ describe ParseTask do
 		  r_json_string += 	 '{"id":"2","[question(1), option(10013)]":"One","[question(2)]":"Test two"}'
 		  r_json_string += ']'
 		  q_array = ParseTask.parse_survey_questions(@q_json_string)
-		  r_array = ParseTask.parse_survey_responses(q_array, r_json_string)
-		  r_array[0][0].class.should eq FlatAnswer
-		  r_array[0][0].answer_set.should eq [['[question(1), option(10013)]', 'One'],['[question(1), option(10014)]', 'Two'], ['[question(1)]', '']]
-		  r_array[0][1].class.should eq SingleAnswer
-			r_array[0][1].answer_set.should eq [['[question(2)]', 'Test one']]
-		  r_array[1][0].class.should eq FlatAnswer
-		  r_array[1][0].answer_set.should eq [['[question(1), option(10013)]', 'One'], ['[question(1)]', ''], ['[question(1)]', '']]
-		  r_array[1][1].class.should eq SingleAnswer
-			r_array[1][1].answer_set.should eq [['[question(2)]', 'Test two']]
+		  r_array = ParseTask.stringify_survey_questions_responses(q_array, r_json_string)
+		  r_array[0].should eq ['question_checkbox', 'question_string']
+		  r_array[1].should eq ['One Two', 'Test one']
+		  r_array[2].should eq ['One', 'Test two']
 		end
 	end
 

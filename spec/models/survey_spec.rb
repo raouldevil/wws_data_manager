@@ -31,6 +31,7 @@ describe Survey do
       survey = FactoryGirl.create(:survey)
       survey.update_attributes(questions_json: q_json_string, responses_json: r_json_string)
       survey.parseCSV
+      puts survey.csv
 
       # For some reason the regex just will not match, hence checking for each row text.
       survey.csv.should include('question_checkbox,question_string')

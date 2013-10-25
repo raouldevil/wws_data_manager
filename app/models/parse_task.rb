@@ -35,14 +35,14 @@ class SingleAnswer < Question
 
   def get_header
   	# Must return as array to use concat
-  	return [underscore(self.title)]
+  	return underscore(self.title)
   end
 
   def get_answer
   	# Must return as array to use concat
   	self.answer_set.each do |answer|
 	  	if answer[0].include?("question(#{self.id})")
-	  		return [answer[1]]
+	  		return answer[1]
 	  	end
   	end
   end
@@ -53,7 +53,7 @@ class FlatAnswer < Question
 
   def get_header
   	# Must return as array to use concat
-  	return [underscore(self.title)]
+  	return underscore(self.title)
   end
 
   def get_answer
@@ -64,7 +64,7 @@ class FlatAnswer < Question
 	  		answer_string << answer[1] + ' '
 	  	end
   	end
-  	return [answer_string.chomp]
+  	return answer_string.chomp
   end
 
 end
@@ -114,9 +114,9 @@ class ParseTask
 
 	end
 
-	def self.stringify_survey_questions_responses(questions_array, r_json_string)
+	def self.stringify_responses(questions_array, response)
 
-		questions_responses_array = []
+
 		questions_info = []
 
   	questions_array.each do |question|
@@ -128,27 +128,12 @@ class ParseTask
   	  questions_info << questions_info_hash
   	end
 
-    questions_string_array = []
-    questions_array.each do |question|
-      questions_string_array << (question.get_header)
+    response_array = []
+    questions_info.each do |q_info|
+      response_array << create_and_parse_response_object(q_info, response)
     end
 
-    questions_responses_array << questions_string_array
-
-	  r_json_data = JSON.parse(r_json_string)
-	  r_json_data.each_with_index do |response, i|
-
-      responses_string_array = []
-      questions_info.each do |q_info|
-        responses_string_array << create_and_parse_response_object(q_info, response)
-      end
-
-      questions_responses_array << responses_string_array
-      puts "Added answers for response #{i + 1}."
-	  end
-
-    puts questions_responses_array
-    return questions_responses_array
+    return response_array
 
 	end
 

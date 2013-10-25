@@ -13,7 +13,16 @@ class Survey < ActiveRecord::Base
 
     parsed_csv = CSV.generate do |csv|
       questions_array = ParseTask.parse_survey_questions(self.questions_json)
-      csv << ParseTask.stringify_survey_questions_responses(questions_array, self.responses_json)
+      questions_stringified_array = []
+      questions_array.each do |question|
+        questions_stringified_array << question.get_header
+      end
+      csv << questions_stringified_array
+
+      r_json_data = JSON.parse(self.responses_json)
+      r_json_data.each do |response|
+        csv << ParseTask.stringify_responses(questions_array, response)
+      end
     end
 
     self.csv = nil

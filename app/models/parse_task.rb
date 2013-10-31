@@ -114,8 +114,17 @@ class ParseTask
 
 	end
 
-	def self.stringify_responses(questions_array, response)
+  def self.stringify_questions(questions_array)
+    questions_stringified_array = []
+    questions_array.each do |question|
+      questions_stringified_array << question.get_header
+    end
 
+    # MultiAnswers return an array, these must be flattened.
+    return questions_stringified_array.flatten
+  end
+
+	def self.stringify_responses(questions_array, response)
 
 		questions_info = []
 
@@ -133,7 +142,8 @@ class ParseTask
       response_array << create_and_parse_response_object(q_info, response)
     end
 
-    return response_array
+    # MultiAnswers return an array, these must be flattened.
+    return response_array.flatten
 
 	end
 
